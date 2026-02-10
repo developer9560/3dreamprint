@@ -64,8 +64,6 @@ export default function Home() {
     0 2px 14px rgba(0, 0, 0, 0.6)
   `
               }}
-
-
             >
               Custom 3D-printed lithophanes that bring your photos to life
             </p>

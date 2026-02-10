@@ -24,8 +24,8 @@ export default function AccountPage() {
                                     <button
                                         key={item}
                                         className={`w-full text-left px-4 py-3 rounded-soft transition-colors ${item === 'Orders'
-                                                ? 'bg-[var(--color-amber)] text-white font-semibold'
-                                                : 'hover:bg-[var(--color-amber-light)]/30 text-[var(--color-text-secondary)]'
+                                            ? 'bg-[var(--color-amber)] text-white font-semibold'
+                                            : 'hover:bg-[var(--color-amber-light)]/30 text-[var(--color-text-secondary)]'
                                             }`}
                                     >
                                         {item}
