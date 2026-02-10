@@ -21,41 +21,80 @@ export default function ValentinesPage() {
     const valentineProducts = [
         {
             id: 1,
-            name: 'Couples Heart Lithophane Lamp',
-            mrp: 1949,
-            price: 1559, // 20% off from 1949
-            image: ['https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=800&h=1000&fit=crop'],
-            category: 'Lamps',
+            name: "3D Printed Unique Heart Shaped Phone Holder",
+            mrp: 500,
+            price: 399,
+            images: ["https://manubim.cdn.shoprenter.hu/custom/manubim/image/cache/w500h500wt1/product/Phone%20Holders/szives-telefontarto-asztali.png.webp?lastmod=0.1762876642", "https://manubim.cdn.shoprenter.hu/custom/manubim/image/cache/w1000h1000wt1/product/Phone%20Holders/personalised-heart-phone-holder-3.png.webp?lastmod=0.1762876642"
+                , "https://manubim.cdn.shoprenter.hu/custom/manubim/image/cache/w1000h1000wt1/product/Phone%20Holders/personalised-heart-phone-holder-3.png.webp?lastmod=0.1762876642"
+            ],
             rating: 5.0,
             reviewCount: 89,
-            slug: 'couples-heart-lithophane-lamp',
-            isBestseller: true,
-            isNew: true,
+            slug: 'heart-shape-phone-holder',
+            discription: "3D Printed Unique Heart Shaped Phone Holder for the tech lovers - 3D printed gift. A custom 3D printed phone holder is always a kind and friendly gift to anyone. In case you would like an other model, please"
         },
         {
             id: 2,
-            name: 'Love Story Photo Frame - Heart',
+            name: "3D Photo (Lithophane) Keychain, circle",
+            mrp: 499,
+            price: 299,
+            images: ["https://manubim.cdn.shoprenter.hu/custom/manubim/image/cache/w500h500wt1/product/3D-photo-lithophane/3d-printed-lithophane-keychain-circle.jpg.webp?lastmod=0.1762876642", "https://manubim.cdn.shoprenter.hu/custom/manubim/image/cache/w500h500wt1/product/3D-photo-lithophane/litofan-kulcstarto-3d-nyomtatott-kor.jpg.webp?lastmod=0.1762876642",
+                "https://manubim.cdn.shoprenter.hu/custom/manubim/image/cache/w500h500wt1/product/3D-photo-lithophane/3d-fenykep-kulcstarto-litofan-kor.jpg.webp?lastmod=0.1762876642"
+            ],
+            rating: 5.0,
+            reviewCount: 89,
+            slug: '3d-photo-lithophane-keychain-circle',
+            discription: "This custom photo keychain (lithophane) is a truly rare and unique gift. The 3D image only looks like a white embossing, but when we turn it towards the light – i.e., illuminate it from behind, for example, by placing it in front of a lamp – the grayscale photo will immediately appear. A great gift for your loved one on Valentine's Day!"
+
+        },
+        {
+            id: 3,
+            name: 'Cut Heart-Shaped Keychains with Names - 3D printed gift, plastic',
             mrp: 1599,
             price: 1279, // 20% off from 1599
-            image: ['https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=800&h=1000&fit=crop'],
+            images: ['https://manubim.cdn.shoprenter.hu/custom/manubim/image/cache/w500h500wt1/product/Key_Rings/Love/cut-heart-shaped-keychain-with-custom-text-3d-printed.jpg.webp?lastmod=0.1762876642', "https://manubim.cdn.shoprenter.hu/custom/manubim/image/cache/w500h500wt1/product/Key_Rings/Love/sziv-alaku-kulcstarto-paroknak-egyedi-nevvel-3d-nyomtatott-termek.jpg.webp?lastmod=0.1762876642"],
             category: 'Frames',
             rating: 4.9,
             reviewCount: 124,
             slug: 'love-story-photo-frame-heart',
-            isBestseller: true,
+            discription: "2 pcs of Cut Heart Shaped Keychain with custom text for lovers.Custom 3D printed gift.The text can be anything and depends only on your creativity.Eg.: your names, nicknames, quotes, etc."
+
         },
         {
-            id: 3,
-            name: 'Forever Together Keychain Set',
-            mrp: 799,
-            price: 639, // 20% off from 799
-            image: ['https://images.unsplash.com/photo-1610056494071-0a5a4e1d1dfd?w=800&h=1000&fit=crop'],
+            id: 4,
+            name: 'Heart Shaped Keychain with Custom Text - 3D printed gift, plastic',
+            mrp: 399,
+            price: 249, // 20% off from 799
+            images: ["https://manubim.cdn.shoprenter.hu/custom/manubim/image/cache/w500h500wt1/product/Key_Rings/Love/heart-shaped-keychain-with-custom-text-3d-printed.jpg.webp?lastmod=0.1762876642", "https://manubim.cdn.shoprenter.hu/custom/manubim/image/cache/w1000h1000wt1/product/Key_Rings/Love/sziv-alaku-kulcstarto-egyedi-szoveggel-3d-nyomtatott.jpg.webp?lastmod=0.1762876642"],
             category: 'Keychains',
             rating: 4.8,
             reviewCount: 203,
-            slug: 'forever-together-keychain-set',
-            isBestseller: true,
+            slug: 'Heart-Shaped-Keychain-with-Custom-Text-3D-printed-gift-plastic',
+            discription: "Heart-Shaped Keychain with custom text option. Custom 3D printed gift. The text can be anything, it depends only on your creativity. Eg.: your love name, nickname, company name, quote, etc."
         },
+        {
+            id: 5,
+            name: "3D Photo (Lithophane) Keychain, rect",
+            mrp: 499,
+            price: 299,
+            images: ["https://manubim.cdn.shoprenter.hu/custom/manubim/image/cache/w500h500wt1/product/3D-photo-lithophane/3d-printed-lithophane-keychain-rect.jpg.webp?lastmod=0.1762876642", "https://manubim.cdn.shoprenter.hu/custom/manubim/image/cache/w500h500wt1/product/3D-photo-lithophane/litofan-kulcstarto-3d-nyomtatott-negyzetes.jpg.webp?lastmod=0.1762876642", "https://manubim.cdn.shoprenter.hu/custom/manubim/image/cache/w500h500wt1/product/3D-photo-lithophane/3d-fenykep-kulcstarto-litofan-negyzetes.jpg.webp?lastmod=0.1762876642"],
+
+            rating: 4.5,
+            reviewCount: 300,
+            slug: "3D-Photo-(Lithophane)-Keychain-rect",
+            discription: "his custom photo keychain (lithophane) is a truly rare and unique gift. The 3D image only looks like a white embossing, but when we turn it towards the light – i.e., illuminate it from behind, for example, by placing it in front of a lamp – the grayscale photo will immediately appear. A great gift for your loved one on Valentine's Day!"
+
+        }, {
+            id: 6,
+            name: "Phone holder Heart",
+            mrp: 999,
+            price: 432,
+            images: ["https://media.printables.com/media/prints/b1861f4d-49eb-4ed3-97c1-2c7844a57b4b/images/11852857_4a37f090-f1b2-44ea-8b0f-4812bf61ce90_d0225394-fe94-4fd6-afd9-4d6601ca6003/thumbs/inside/1600x1200/png/2026-01-27-15_19_07-handyhalter-herz-v1_-zuhause-autodesk-fusion-lizenz-fur-bildungseinrichtung.webp", "https://media.printables.com/media/prints/b1861f4d-49eb-4ed3-97c1-2c7844a57b4b/images/11852857_4a37f090-f1b2-44ea-8b0f-4812bf61ce90_d0225394-fe94-4fd6-afd9-4d6601ca6003/thumbs/inside/1600x1200/png/2026-01-27-15_19_07-handyhalter-herz-v1_-zuhause-autodesk-fusion-lizenz-fur-bildungseinrichtung.webp"],
+            rating: 4.5,
+            reviewCount: 300,
+            slug: "Phone-holder-Heart",
+            discription: "A cute mobile phone holder to give as a gift."
+
+        }
     ];
 
     return (
@@ -206,7 +245,7 @@ export default function ValentinesPage() {
                             <div key={product.id} className="relative group p-4 rounded-[var(--radius-xl)] bg-white shadow-romantic border border-rose-50 hover:shadow-2xl transition-all duration-500">
                                 <div className="relative aspect-[4/5] overflow-hidden rounded-2xl mb-6">
                                     <img
-                                        src={product.image[0]}
+                                        src={product.images?.[0]}
                                         alt={product.name}
                                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"
                                     />

@@ -9,8 +9,23 @@ import TestimonialSlider from '@/components/home/TestimonialSlider';
 export default function Home() {
   return (
     <div className="relative">
+      {/* Video Background */}
+      <div className="fixed inset-0 w-full h-screen overflow-hidden -z-10">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="w-full h-full object-cover"
+        >
+          <source src="/videos/bgvideo.mp4" type="video/mp4" />
+        </video>
+        {/* Dark overlay to ensure text readability */}
+        <div className="absolute inset-0 bg-black/40"></div>
+      </div>
+
       {/* Scroll-based Image Sequence Background */}
-      <ScrollImageSequence />
+      {/* <ScrollImageSequence /> */}
 
       {/* Scrolling Content Overlay */}
       <div className="relative z-10">
