@@ -1,26 +1,128 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Montserrat:wght@600;700&family=Lato:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 @import "tailwindcss";
 
+/* ===================================
+   LITHOPHANE E-COMMERCE THEME
+   Warm, Emotional, Minimal Design
+   =================================== */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Colors - Warm & Emotional Theme */
+  --color-cream: #FAFAFA;
+  --color-amber: #FFC107;
+  --color-amber-dark: #FFB300;
+  --color-amber-light: #FFECB3;
+  --color-slate: #4A4A4A;
+  --color-slate-dark: #2C2C2C;
+  --color-text: #212121;
+  --color-text-secondary: #616161;
+  --color-white: #FFFFFF;
+  --color-gray-light: #F5F5F5;
+  --color-gray-border: #E0E0E0;
+  --color-error: #E53935;
+  --color-success: #43A047;
+
+  /* Valentine Romantic Palette */
+  --v-rose: #E11D48;
+  --v-blush: #FDE2E4;
+  --v-pink: #FB7185;
+  --v-amber: #F59E0B;
+  --v-ivory: #FFFBF0;
+  --v-wine: #881337;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+  --shadow-hover: 0 6px 16px rgba(255, 193, 7, 0.2);
+  --shadow-romantic: 0 10px 40px -10px rgba(225, 29, 72, 0.15);
+
+  /* Border Radius */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-xl: 32px;
+  --radius-full: 9999px;
+
+  /* Typography */
+  --font-heading: 'Montserrat', 'Poppins', sans-serif;
+  --font-body: 'Lato', sans-serif;
+  --font-elegant: 'Playfair Display', serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* ===================================
+   UTILITY CLASSES
+   =================================== */
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+.litho-glow {
+  box-shadow: 0 0 25px -5px rgba(245, 158, 11, 0.3);
+  transition: all 0.5s ease;
+}
+
+.litho-glow:hover {
+  box-shadow: 0 0 40px -2px rgba(245, 158, 11, 0.5);
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+
+  100% {
+    transform: translateY(0px);
   }
 }
 
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes heartFade {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) translateY(0);
+  }
+
+  50% {
+    opacity: 0.6;
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.2) translateY(-40px);
+  }
+}
+
+.animate-heart-fade {
+  animation: heartFade 8s ease-in-out infinite;
+}
+
+/* ===================================
+   GLOBAL STYLES
+   =================================== */
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-cream);
+  color: var(--color-text);
+  font-family: 'Lato', sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  overflow-x: hidden;
 }
