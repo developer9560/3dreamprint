@@ -59,7 +59,7 @@ export default function ProductFormPage() {
     });
 
     const [skuForms, setSkuForms] = useState<any[]>([
-        { price: 0, mrp: 0, stock: 0 }
+        { price: 0, mrp: 0 }
     ]);
 
     // Gallery State
@@ -128,7 +128,6 @@ export default function ProductFormPage() {
                         id: s.id,
                         price: s.price,
                         mrp: s.mrp,
-                        stock: s.stock
                     })));
                 }
                 setSavedSkus(product.skus || []);
@@ -182,7 +181,7 @@ export default function ProductFormPage() {
 
     // --- STAGE 2: SKUs ---
     const addSkuRow = () => {
-        setSkuForms([...skuForms, { price: 0, mrp: 0, stock: 0 }]);
+        setSkuForms([...skuForms, { price: 0, mrp: 0 }]);
     };
 
     const removeSkuRow = async (index: number) => {
@@ -278,7 +277,6 @@ export default function ProductFormPage() {
     //             id: s.id,
     //             price: s.price,
     //             mrp: s.mrp,
-    //             stock: s.stock,
     //             costPrice: s.costPrice
     //         })));
     //         toast.success('SKUs saved successfully');
@@ -719,18 +717,6 @@ export default function ProductFormPage() {
                                             onChange={e => {
                                                 const next = [...skuForms];
                                                 next[idx].mrp = parseFloat(e.target.value);
-                                                setSkuForms(next);
-                                            }}
-                                        />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <label className="text-[11px] font-black text-gray-400 uppercase">Initial Stock</label>
-                                        <Input
-                                            type="number"
-                                            value={sku.stock}
-                                            onChange={e => {
-                                                const next = [...skuForms];
-                                                next[idx].stock = parseInt(e.target.value);
                                                 setSkuForms(next);
                                             }}
                                         />

@@ -49,7 +49,7 @@ export function useSearchAutocomplete(
                     limit: limit,
                 });
 
-                setSuggestions(response.content || []);
+                // setSuggestions(response.content || []);
                 setIsLoading(false);
             } catch (err: any) {
                 if (err.name !== 'AbortError' && err.name !== 'CanceledError') {

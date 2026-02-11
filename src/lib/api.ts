@@ -401,8 +401,13 @@ export const productsAPI = {
     return data.data;
   },
   getAll: async (filters?: ProductFilters): Promise<ProductsResponse> => {
+    // Spring Pageable expects page to be 0-indexed, so we subtract 1 if coming from 1-indexed UI
+    const params = {
+      ...filters,
+      page: filters?.page ? filters.page - 1 : 0,
+    };
     const { data } = await api.get<ProductsResponse>(API_ENDPOINTS.PRODUCTS, {
-      params: filters,
+      params,
     });
     return data;
   },

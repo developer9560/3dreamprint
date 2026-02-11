@@ -305,8 +305,7 @@ const mapBackendCartToFrontend = (res: CartResponse): CartItem[] => {
         price: item.price,
         mrp: item.originalPrice,
         costPrice: 0,
-        productId: item.productId,
-        stock: item.stock
+        productId: item.productId
       }]
     },
     quantity: item.quantity,

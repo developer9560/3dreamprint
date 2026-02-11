@@ -38,14 +38,13 @@ export interface ProductSku {
     price: number;
     mrp: number;
     productId: number;
-    stock: number;
 }
 
 export interface ProductSkuRequest {
     productId: number;
     price: number;
     mrp: number;
-    stock: number;
+
 }
 
 export interface CategoryTreeResponse {
@@ -88,7 +87,6 @@ export interface ProductFilters {
     minPrice?: number;
     maxPrice?: number;
     shapes?: string[];
-    inStock?: boolean;
     discount?: number;
     rating?: number;
     sortBy?: 'popularity' | 'price_asc' | 'price_desc' | 'newest' | 'discount' | 'rating';
@@ -102,7 +100,6 @@ export interface AdminProductSkuMiniResponse {
     skuCode: string;
     price: number;
     mrp: number;
-    stock: number;
     attributeValues: AttributeResponse[];
 }
 
@@ -126,7 +123,7 @@ export interface AdminProductResponseOverview {
 }
 
 export interface ProductsResponse {
-    content: AdminProductResponseOverview[];
+    content: Product[];
     totalElements: number;
     totalPages: number;
     size: number;
@@ -156,8 +153,6 @@ export interface ProductAnalytics {
     totalProducts: number;
     activeProducts: number;
     inActiveProducts: number;
-    lowStockProducts: number;
-    outOfStockProducts: number;
     productsByCategory: Record<string, number>;
 }
 
@@ -172,7 +167,6 @@ export interface ProductSkuDetailed {
     skuCode: string;
     price: number;
     mrp: number;
-    stock: number;
     attributeValues: ProductAttributeValue[];
 }
 
@@ -218,6 +212,6 @@ export interface SkuVariant {
     skuId: number;
     price: number;
     mrp: number;
-    stock: number;
+
     attributeValues: Record<number, number>; // attributeId -> valueId
 }

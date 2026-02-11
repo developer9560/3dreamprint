@@ -63,6 +63,7 @@ export const API_ENDPOINTS = {
 
   // Products
   PRODUCTS: '/public/products',
+  SHOP_PRODUCTS: '/public/products/shop',
   PRODUCT_BY_ID: (id: string) => `/products/${id}`,
   PRODUCT_BY_SLUG: (slug: string) => `/products/slug/${slug}`,
   PRODUCT_REVIEWS: (id: string) => `/products/${id}/reviews`,

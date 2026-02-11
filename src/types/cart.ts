@@ -11,7 +11,6 @@ export interface CartItem {
     originalPrice?: number;
     discount?: number;
     total: number;
-    stock?: number;
     attributes?: Record<string, string>;
 }
 
@@ -74,6 +73,5 @@ export interface CartItemResponse {
     originalPrice: number;
     discount: number;
     total: number;
-    stock: number;
     attributes?: Record<string, string>;
 }

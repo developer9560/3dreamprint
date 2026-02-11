@@ -42,7 +42,6 @@ interface Product {
         skuCode: string;
         price: number;
         mrp: number;
-        stock: number;
         attributeValues: Array<{
             name: string;
             type: string;
@@ -164,7 +163,7 @@ export default function AdminProductsPage() {
             <div className="flex flex-col gap-4">
                 <div>
                     <h1 className="text-2xl font-bold text-gray-900">Product Management</h1>
-                    <p className="text-gray-500">Manage your catalog, stock and pricing</p>
+                    <p className="text-gray-500">Manage your catalog and pricing</p>
                 </div>
                 <Link href="/suraj-kumar-3dream-print-admin/products/new" className="sm:self-end">
                     <Button size="lg" className="bg-[#10B981] hover:bg-[#059669] w-full sm:w-auto">
@@ -203,31 +202,6 @@ export default function AdminProductsPage() {
                         </div>
                     </div>
 
-                    {/* Low Stock */}
-                    <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm hover:shadow-md transition-all group">
-                        <div className="flex items-center gap-4">
-                            <div className="p-3 bg-amber-50 text-amber-500 rounded-2xl group-hover:scale-110 transition-transform">
-                                <AlertTriangle size={24} />
-                            </div>
-                            <div>
-                                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Low Stock</p>
-                                <h3 className="text-xl font-black text-gray-900">{analytics.lowStockProducts}</h3>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Out of Stock */}
-                    <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm hover:shadow-md transition-all group">
-                        <div className="flex items-center gap-4">
-                            <div className="p-3 bg-red-50 text-red-500 rounded-2xl group-hover:scale-110 transition-transform">
-                                <XCircle size={24} />
-                            </div>
-                            <div>
-                                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Out of Stock</p>
-                                <h3 className="text-xl font-black text-gray-900">{analytics.outOfStockProducts}</h3>
-                            </div>
-                        </div>
-                    </div>
 
                     {/* Top Category */}
                     <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm hover:shadow-md transition-all group">
@@ -405,12 +379,6 @@ export default function AdminProductsPage() {
                                                             <div key={sku.id} className="p-2 bg-gray-50 rounded-lg border border-gray-100 text-xs">
                                                                 <div className="flex items-center justify-between mb-1">
                                                                     <span className="font-semibold text-gray-700">SKU #{idx + 1}</span>
-                                                                    <span className={cn(
-                                                                        "px-1.5 py-0.5 rounded text-[10px] font-bold",
-                                                                        sku.stock > 0 ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-700"
-                                                                    )}>
-                                                                        Stock: {sku.stock}
-                                                                    </span>
                                                                 </div>
                                                                 {sku.attributeValues && sku.attributeValues.length > 0 && (
                                                                     <div className="flex flex-wrap gap-1 mb-1">

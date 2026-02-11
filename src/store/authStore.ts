@@ -74,7 +74,6 @@ export const useAuthStore = create<AuthStore>()(
 
           const token = response.data.accessToken;
 
-
           set({
             token: token,
             isAuthenticated: true,
