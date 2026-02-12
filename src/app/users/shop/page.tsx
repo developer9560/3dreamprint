@@ -1,11 +1,11 @@
 "use client"
-import React from 'react';
+import React, { Suspense } from 'react';
 import { useState, useEffect, useCallback } from 'react';
-import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
 import ProductCard from '@/src/components/products/ProductCard';
 import Button from '@/src/components/ui/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFilter, faTimes, faChevronDown, faSortAmountDown, faLightbulb, faKey, faImage, faGift, faSearch, faLayerGroup } from '@fortawesome/free-solid-svg-icons';
+import { faFilter, faTimes, faChevronDown, faLightbulb, faKey, faImage, faGift, faSearch, faLayerGroup } from '@fortawesome/free-solid-svg-icons';
 import { productsAPI, categoryAPI } from '@/src/lib/api';
 import { Product, ProductFilters } from '@/src/types/product';
 import { userCategory } from '@/src/types/category';
@@ -19,65 +19,69 @@ const CATEGORY_ICONS: Record<string, any> = {
     'default': faLayerGroup
 };
 
-export default function ShopPage() {
+function ShopContent() {
+    const router = useRouter();
+    const searchParams = useSearchParams();
+
+    // Derived State from URL
+    const categoryParam = searchParams.get('category') || 'All';
+    const shapeParam = searchParams.get('shape') || 'All Shapes';
+    const priceParam = searchParams.get('price') || 'All Prices';
+    const sortParam = searchParams.get('sort') || 'Featured';
+    const pageParam = Number(searchParams.get('page')) || 1;
+    const queryParam = searchParams.get('q') || '';
+
     const [products, setProducts] = useState<Product[]>([]);
     const [categories, setCategories] = useState<userCategory[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isFilterOpen, setIsFilterOpen] = useState(false);
 
-    // Filter State
-    const [selectedCategory, setSelectedCategory] = useState<string>('All');
-    const [selectedShape, setSelectedShape] = useState('All Shapes');
-    const [selectedPrice, setSelectedPrice] = useState('All Prices');
-    const [sortBy, setSortBy] = useState('Featured');
-    const [currentPage, setCurrentPage] = useState(1);
+    // Pagination State
     const [totalPages, setTotalPages] = useState(1);
     const [totalItems, setTotalItems] = useState(0);
 
-    const [isScrolled, setIsScrolled] = useState(false);
+    // Initial Category Fetch
     useEffect(() => {
         const fetchCategories = async () => {
-            setIsLoading(true);
             try {
                 const response = await categoryAPI.getCategories();
                 setCategories(response);
-            }
-            catch (e) {
-                console.log(e);
-            } finally {
-                setIsLoading(false);
+            } catch (e) {
+                console.error("Failed to fetch categories", e);
             }
         }
         fetchCategories();
     }, [])
 
-    // Fetch Products
+    // Fetch Products on URL Change
     const fetchProducts = useCallback(async () => {
         setIsLoading(true);
         try {
             const filters: ProductFilters = {
-                page: currentPage,
+                page: pageParam,
                 limit: 12,
-                sortBy: sortBy.toLowerCase().includes('price')
-                    ? (sortBy.includes('Low') ? 'price_asc' : 'price_desc')
-                    : (sortBy.includes('New') ? 'newest' : 'popularity') as any
+                sortBy: sortParam.toLowerCase().includes('price')
+                    ? (sortParam.includes('Low') ? 'price_asc' : 'price_desc')
+                    : (sortParam.includes('New') ? 'newest' : 'popularity') as any,
+                search: queryParam || undefined
             };
 
-            if (selectedCategory !== 'All') {
-                const cat = categories.find(c => c.name === selectedCategory);
-                if (cat) filters.categoryId = String(cat.id);
+            // Category Filter
+            if (categoryParam !== 'All') {
+                filters.category = categoryParam;
             }
 
-            if (selectedShape !== 'All Shapes') {
-                filters.shapes = [selectedShape];
+            // Shape Filter
+            if (shapeParam !== 'All Shapes') {
+                filters.shapes = [shapeParam];
             }
 
-            // Price filtering logic (simplified for now as backend might need min/max)
-            if (selectedPrice !== 'All Prices') {
-                if (selectedPrice.includes('Under')) filters.maxPrice = 500;
-                else if (selectedPrice.includes('Above')) filters.minPrice = 2000;
+            // Price Filter
+            if (priceParam !== 'All Prices') {
+                if (priceParam.includes('Under')) filters.maxPrice = 500;
+                else if (priceParam.includes('Above')) filters.minPrice = 2000;
                 else {
-                    const parts = selectedPrice.split('-').map(p => parseInt(p.replace(/[^0-9]/g, '')));
+                    const parts = priceParam.split('-').map(p => parseInt(p.replace(/[^0-9]/g, '')));
                     filters.minPrice = parts[0];
                     filters.maxPrice = parts[1];
                 }
@@ -93,12 +97,29 @@ export default function ShopPage() {
         } finally {
             setIsLoading(false);
         }
-    }, [currentPage, selectedCategory, selectedShape, selectedPrice, sortBy, categories]);
-
+    }, [categoryParam, shapeParam, priceParam, sortParam, pageParam, queryParam]);
 
     useEffect(() => {
         fetchProducts();
     }, [fetchProducts]);
+
+    // Update URL Helper
+    const updateFilter = (type: string, value: string) => {
+        const params = new URLSearchParams(searchParams.toString());
+
+        if (value === 'All' || value === 'All Shapes' || value === 'All Prices') {
+            params.delete(type);
+        } else {
+            params.set(type, value);
+        }
+
+        // Reset page on filter change
+        if (type !== 'page') {
+            params.set('page', '1');
+        }
+
+        router.push(`?${params.toString()}`, { scroll: false });
+    };
 
     const shapes = ['All Shapes', 'Round', 'Square', 'Heart', 'Hexagon'];
     const priceRanges = ['All Prices', 'Under ₹500', '₹500 - ₹1000', '₹1000 - ₹2000', 'Above ₹2000'];
@@ -113,24 +134,24 @@ export default function ShopPage() {
                 </h4>
                 <div className="space-y-2">
                     <button
-                        onClick={() => setSelectedCategory('All')}
-                        className={`w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-300 group ${selectedCategory === 'All' ? 'bg-amber-500 text-white shadow-lg shadow-amber-500/30' : 'bg-gray-50 text-gray-500 hover:bg-gray-100 hover:text-gray-900'}`}
+                        onClick={() => updateFilter('category', 'All')}
+                        className={`w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-300 group ${categoryParam === 'All' ? 'bg-amber-500 text-white shadow-lg shadow-amber-500/30' : 'bg-gray-50 text-gray-500 hover:bg-gray-100 hover:text-gray-900'}`}
                     >
                         <span className="flex items-center gap-3 font-medium">
-                            <FontAwesomeIcon icon={faFilter} className={selectedCategory === 'All' ? 'text-white' : 'text-gray-400 group-hover:text-amber-500'} />
+                            <FontAwesomeIcon icon={faFilter} className={categoryParam === 'All' ? 'text-white' : 'text-gray-400 group-hover:text-amber-500'} />
                             All Collections
                         </span>
                     </button>
                     {categories.map((cat) => (
                         <button
                             key={cat.id}
-                            onClick={() => setSelectedCategory(cat.name)}
-                            className={`w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-300 group ${selectedCategory === cat.name ? 'bg-amber-500 text-white shadow-lg shadow-amber-500/30' : 'bg-gray-50 text-gray-500 hover:bg-gray-100 hover:text-gray-900'}`}
+                            onClick={() => updateFilter('category', cat.slug)}
+                            className={`w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-300 group ${categoryParam === cat.slug ? 'bg-amber-500 text-white shadow-lg shadow-amber-500/30' : 'bg-gray-50 text-gray-500 hover:bg-gray-100 hover:text-gray-900'}`}
                         >
                             <span className="flex items-center gap-3 font-medium text-left">
                                 <FontAwesomeIcon
                                     icon={CATEGORY_ICONS[cat.name] || CATEGORY_ICONS.default}
-                                    className={selectedCategory === cat.name ? 'text-white' : 'text-gray-400 group-hover:text-amber-500'}
+                                    className={categoryParam === cat.slug ? 'text-white' : 'text-gray-400 group-hover:text-amber-500'}
                                 />
                                 {cat.name}
                             </span>
@@ -140,7 +161,7 @@ export default function ShopPage() {
             </div>
 
             {/* Shape Filter */}
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+            {/* <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
                 <h4 className="text-sm font-bold text-gray-900 mb-4 uppercase tracking-wider">
                     By Shape
                 </h4>
@@ -148,14 +169,14 @@ export default function ShopPage() {
                     {shapes.map((shape) => (
                         <button
                             key={shape}
-                            onClick={() => setSelectedShape(shape)}
-                            className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all ${selectedShape === shape ? 'bg-amber-500 text-white shadow-md' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`}
+                            onClick={() => updateFilter('shape', shape)}
+                            className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all ${shapeParam === shape ? 'bg-amber-500 text-white shadow-md' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`}
                         >
                             {shape}
                         </button>
                     ))}
                 </div>
-            </div>
+            </div> */}
 
             {/* Price Filter */}
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
@@ -165,17 +186,17 @@ export default function ShopPage() {
                 <div className="space-y-2">
                     {priceRanges.map((range) => (
                         <label key={range} className="flex items-center gap-3 cursor-pointer group p-2 hover:bg-gray-50 rounded-lg transition-colors">
-                            <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${selectedPrice === range ? 'border-amber-500' : 'border-gray-300 group-hover:border-gray-400'}`}>
-                                {selectedPrice === range && <div className="w-2.5 h-2.5 rounded-full bg-amber-500" />}
+                            <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${priceParam === range ? 'border-amber-500' : 'border-gray-300 group-hover:border-gray-400'}`}>
+                                {priceParam === range && <div className="w-2.5 h-2.5 rounded-full bg-amber-500" />}
                             </div>
-                            <span className={`text-sm transition-colors ${selectedPrice === range ? 'text-gray-900 font-bold' : 'text-gray-500'}`}>
+                            <span className={`text-sm transition-colors ${priceParam === range ? 'text-gray-900 font-bold' : 'text-gray-500'}`}>
                                 {range}
                             </span>
                             <input
                                 type="radio"
                                 name="price"
-                                checked={selectedPrice === range}
-                                onChange={() => setSelectedPrice(range)}
+                                checked={priceParam === range}
+                                onChange={() => updateFilter('price', range)}
                                 className="hidden"
                             />
                         </label>
@@ -188,7 +209,7 @@ export default function ShopPage() {
     return (
         <div className="min-h-screen bg-gray-50/50">
             {/* Hero Header */}
-            <div className="relative pt-20 pb-16 bg-white overflow-hidden">
+            <div className="relative pt-20 pb-16 overflow-hidden">
                 <div className="absolute top-0 right-0 w-1/3 h-full bg-amber-50/30 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2" />
                 <div className="container mx-auto px-4 md:px-8 relative z-10 text-center">
                     <h1 className="text-5xl md:text-7xl font-black text-gray-900 mb-6 font-[family-name:var(--font-heading)] leading-[1.1] tracking-tight">
@@ -198,7 +219,7 @@ export default function ShopPage() {
                     <p className="text-lg text-gray-400 max-w-2xl mx-auto font-medium leading-relaxed">
                         Discover our collection of handcrafted lithophanes. Each piece reveals hidden depth and emotion when illuminated.
                     </p>
-                </div>s
+                </div>
             </div>
 
             <div className="container mx-auto px-4 md:px-8 py-12">
@@ -213,8 +234,8 @@ export default function ShopPage() {
                     </button>
                     <div className="flex-1 relative">
                         <select
-                            value={sortBy}
-                            onChange={(e) => setSortBy(e.target.value)}
+                            value={sortParam}
+                            onChange={(e) => updateFilter('sort', e.target.value)}
                             className="w-full appearance-none px-6 py-4 bg-white border border-gray-200 rounded-2xl shadow-xl text-gray-900 font-bold focus:outline-none focus:border-amber-500"
                         >
                             <option>Sort: Featured</option>
@@ -226,7 +247,7 @@ export default function ShopPage() {
                     </div>
                 </div>
 
-                <div className="flex flex-col lg:flex-row gap-10 xl:gap-16">
+                <div className="flex flex-col lg:flex-row gap-3">
                     {/* Desktop Sidebar */}
                     <aside className="hidden lg:block w-72 flex-shrink-0">
                         <div className="sticky top-28 bg-white/50 backdrop-blur-sm p-1 rounded-3xl">
@@ -260,9 +281,8 @@ export default function ShopPage() {
                                     </Button>
                                     <button
                                         onClick={() => {
-                                            setSelectedCategory('All');
-                                            setSelectedShape('All Shapes');
-                                            setSelectedPrice('All Prices');
+                                            router.push('?', { scroll: false });
+                                            setIsFilterOpen(false);
                                         }}
                                         className="w-full mt-4 py-3 text-xs font-black text-gray-400 hover:text-rose-500 uppercase tracking-widest transition-colors"
                                     >
@@ -291,13 +311,13 @@ export default function ShopPage() {
 
                         {/* Product Grid */}
                         {isLoading ? (
-                            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+                            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2 md:gap-4">
                                 {[...Array(6)].map((_, i) => (
                                     <div key={i} className="aspect-[4/6] bg-gray-100 rounded-3xl animate-pulse" />
                                 ))}
                             </div>
                         ) : products.length > 0 ? (
-                            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+                            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2 md:gap-4">
                                 {products.map((product, index) => (
                                     <div key={product.id} className="animate-fadeIn" style={{ animationDelay: `${index * 50}ms` }}>
                                         <ProductCard product={product} priority={index < 3} />
@@ -318,8 +338,8 @@ export default function ShopPage() {
                         {!isLoading && totalPages > 1 && (
                             <div className="flex justify-center items-center gap-2 mt-20">
                                 <button
-                                    disabled={currentPage === 1}
-                                    onClick={() => setCurrentPage(prev => prev - 1)}
+                                    disabled={pageParam === 1}
+                                    onClick={() => updateFilter('page', String(pageParam - 1))}
                                     className="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-gray-100 text-gray-400 hover:bg-amber-500 hover:text-white hover:border-amber-500 disabled:opacity-50 disabled:hover:bg-white disabled:hover:text-gray-400 transition-all shadow-sm"
                                 >
                                     &lt;
@@ -328,16 +348,16 @@ export default function ShopPage() {
                                 {[...Array(totalPages)].map((_, i) => (
                                     <button
                                         key={i + 1}
-                                        onClick={() => setCurrentPage(i + 1)}
-                                        className={`w-10 h-10 flex items-center justify-center rounded-xl border transition-all font-bold text-sm ${currentPage === i + 1 ? 'bg-amber-500 text-white border-amber-500 shadow-lg shadow-amber-500/20' : 'bg-white border-gray-100 text-gray-500 hover:border-amber-500'}`}
+                                        onClick={() => updateFilter('page', String(i + 1))}
+                                        className={`w-10 h-10 flex items-center justify-center rounded-xl border transition-all font-bold text-sm ${pageParam === i + 1 ? 'bg-amber-500 text-white border-amber-500 shadow-lg shadow-amber-500/20' : 'bg-white border-gray-100 text-gray-500 hover:border-amber-500'}`}
                                     >
                                         {i + 1}
                                     </button>
                                 ))}
 
                                 <button
-                                    disabled={currentPage === totalPages}
-                                    onClick={() => setCurrentPage(prev => prev + 1)}
+                                    disabled={pageParam === totalPages}
+                                    onClick={() => updateFilter('page', String(pageParam + 1))}
                                     className="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-gray-100 text-gray-400 hover:bg-amber-500 hover:text-white hover:border-amber-500 disabled:opacity-50 disabled:hover:bg-white disabled:hover:text-gray-400 transition-all shadow-sm"
                                 >
                                     &gt;
@@ -366,5 +386,13 @@ export default function ShopPage() {
                 }
             `}</style>
         </div>
+    );
+}
+
+export default function ShopPage() {
+    return (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="w-10 h-10 border-4 border-amber-500 border-t-transparent rounded-full animate-spin"></div></div>}>
+            <ShopContent />
+        </Suspense>
     );
 }

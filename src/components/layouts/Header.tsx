@@ -141,7 +141,7 @@ const Header = () => {
                                     className="mr-2 text-xl transition-transform duration-300 group-hover:rotate-12 text-white"
                                     aria-hidden="true"
                                 />
-                                +91 97185 19973
+                                Chat on WhatsApp
                             </a>
                         </li>
 

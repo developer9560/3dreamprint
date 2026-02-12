@@ -57,15 +57,6 @@ export const ProductDetails: React.FC<ProductDetailsProps> = ({
                 </p>
             </div>
 
-            {/* Collapsible Sections (Mocked for now as static) */}
-            <div className="border-t border-gray-100 pt-2">
-                {['Where is it sourced from?', 'Shelf Life', 'Nutritional Info'].map((item) => (
-                    <button key={item} className="w-full flex items-center justify-between py-4 text-left group">
-                        <span className="font-medium text-gray-700 group-hover:text-[#10B981] transition-colors">{item}</span>
-                        <ChevronDown size={18} className="text-gray-400 group-hover:text-[#10B981] transition-colors" />
-                    </button>
-                ))}
-            </div>
         </div>
     );
 };

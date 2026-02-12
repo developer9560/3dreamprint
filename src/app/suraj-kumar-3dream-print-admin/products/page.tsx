@@ -37,6 +37,7 @@ interface Product {
     views: number;
     categoryName: string;
     primaryImage: string;
+    customizable: boolean;
     skus: Array<{
         id: number;
         skuCode: string;
@@ -148,6 +149,18 @@ export default function AdminProductsPage() {
                 p.id === id ? { ...p, featured: !currentStatus } : p
             ));
             toast.success(`Product ${currentStatus ? 'unfeatured' : 'featured'}`);
+        } catch (error) {
+            toast.error('Failed to update product status');
+        }
+    };
+
+    const toggleCustomizable = async (id: number, currentStatus: boolean) => {
+        try {
+            await productsAPI.toggleCustomizable(id);
+            setProducts((prev: Product[]) => prev.map(p =>
+                p.id === id ? { ...p, customizable: !currentStatus } : p
+            ));
+            toast.success(`Product ${currentStatus ? 'set to Standard' : 'set to Customizable'}`);
         } catch (error) {
             toast.error('Failed to update product status');
         }
@@ -288,6 +301,7 @@ export default function AdminProductsPage() {
                                 <th className="px-6 py-4 font-semibold text-gray-600">Product</th>
                                 {/* <th className="px-6 py-4 font-semibold text-gray-600">Brand</th> */}
                                 <th className="px-6 py-4 font-semibold text-gray-600">Category</th>
+                                <th className="px-6 py-4 font-semibold text-gray-600">Type</th>
                                 <th className="px-6 py-4 font-semibold text-gray-600">Featured</th>
                                 <th className="px-6 py-4 font-semibold text-gray-600">SKUs</th>
                                 <th className="px-6 py-4 font-semibold text-gray-600">Active</th>
@@ -300,14 +314,14 @@ export default function AdminProductsPage() {
                             {isLoading ? (
                                 Array.from({ length: 5 }).map((_, i) => (
                                     <tr key={i} className="animate-pulse">
-                                        <td colSpan={9} className="px-6 py-4">
+                                        <td colSpan={10} className="px-6 py-4">
                                             <div className="h-12 bg-gray-100 rounded"></div>
                                         </td>
                                     </tr>
                                 ))
                             ) : filteredProducts.length === 0 ? (
                                 <tr>
-                                    <td colSpan={9} className="px-6 py-12 text-center text-gray-500">
+                                    <td colSpan={10} className="px-6 py-12 text-center text-gray-500">
                                         No products found.
                                     </td>
                                 </tr>
@@ -350,16 +364,31 @@ export default function AdminProductsPage() {
                                             </span>
                                         </td>
 
+                                        {/* Customizable Status */}
+                                        <td className="px-6 py-4">
+                                            <button
+                                                onClick={() => toggleCustomizable(product.id, product.customizable)}
+                                                className={cn(
+                                                    "px-2.5 py-1 rounded-full text-[10px] font-black tracking-widest transition-all border",
+                                                    product.customizable
+                                                        ? "bg-indigo-50 text-indigo-600 border-indigo-200 hover:bg-indigo-100"
+                                                        : "bg-gray-50 text-gray-500 border-gray-200 hover:bg-gray-100"
+                                                )}
+                                            >
+                                                {product.customizable ? 'CUSTOM' : 'STD'}
+                                            </button>
+                                        </td>
+
                                         {/* Featured */}
                                         <td className="px-6 py-4">
                                             <div className="flex items-center gap-1.5">
                                                 {product.featured ? (
-                                                    <span className="px-2.5 py-1 bg-amber-50 text-amber-700 rounded-full text-[10px] font-black tracking-wider border border-amber-200 flex items-center gap-1" onClick={() => toggleFeatured(product.id, product.featured)}>
+                                                    <span className="px-2.5 py-1 bg-amber-50 text-amber-700 rounded-full text-[10px] font-black tracking-wider border border-amber-200 flex items-center gap-1 cursor-pointer" onClick={() => toggleFeatured(product.id, product.featured)}>
                                                         <TrendingUp className="w-3 h-3" />
                                                         YES
                                                     </span>
                                                 ) : (
-                                                    <span className="px-2.5 py-1 bg-gray-50 text-gray-500 rounded-full text-[10px] font-semibold tracking-wider border border-gray-200" onClick={() => toggleFeatured(product.id, product.featured)}>
+                                                    <span className="px-2.5 py-1 bg-gray-50 text-gray-500 rounded-full text-[10px] font-semibold tracking-wider border border-gray-200 cursor-pointer" onClick={() => toggleFeatured(product.id, product.featured)}>
                                                         NO
                                                     </span>
                                                 )}

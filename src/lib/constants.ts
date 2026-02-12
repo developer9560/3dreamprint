@@ -12,20 +12,20 @@ export const ROUTES = {
   FORGOT_PASSWORD: '/auth/forgot-password',
 
   // User
-  USER_HOME: '/user',
-  PRODUCTS: '/user/products',
-  PRODUCT_DETAIL: (id: string) => `/user/products/${id}`,
-  CATEGORY: (slug: string) => `/user/category/${slug}`,
-  CART: '/user/cart',
-  CHECKOUT: '/user/checkout',
-  ORDER_SUCCESS: (orderId: string) => `/user/order-success/${orderId}`,
+  USER_HOME: '/users',
+  PRODUCTS: '/users/products',
+  PRODUCT_DETAIL: (id: string) => `/users/products/${id}`,
+  CATEGORY: (slug: string) => `/users/category/${slug}`,
+  CART: '/users/cart',
+  CHECKOUT: '/users/checkout',
+  ORDER_SUCCESS: (orderId: string) => `/users/order-success/${orderId}`,
 
   // Account
-  ACCOUNT: '/user/account',
-  MY_ORDERS: '/user/account/orders',
-  ORDER_DETAIL: (id: string) => `/user/account/orders/${id}`,
-  ADDRESSES: '/user/account/addresses',
-  WISHLIST: '/user/account/wishlist',
+  ACCOUNT: '/users/account',
+  MY_ORDERS: '/users/account/orders',
+  ORDER_DETAIL: (id: string) => `/users/account/orders/${id}`,
+  ADDRESSES: '/users/account/addresses',
+  WISHLIST: '/users/account/wishlist',
 
   // Static
   ABOUT: '/about',

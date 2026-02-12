@@ -129,6 +129,13 @@ export interface AdminOrderDetailResponse {
         productName: string;
         productImage: string;
         productId: number;
+        customizationData?: {
+            uploadedImageUrls: string[];
+            selectedShape: string;
+            selectedSize: string;
+            selectedLighting: string;
+            specialInstructions: string;
+        };
     }[];
     shippingAddress: Address;
     razorpayOrderId?: string;

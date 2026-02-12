@@ -56,6 +56,7 @@ export default function ProductFormPage() {
         categoryId: '',
         summary: '',
         productDetails: [] as { key: string, value: string }[],
+        isCustomizable: false
     });
 
     const [skuForms, setSkuForms] = useState<any[]>([
@@ -121,7 +122,8 @@ export default function ProductFormPage() {
                     shape: product.Shape || '',
                     categoryId: String(product.category.id),
                     summary: product.summary,
-                    productDetails: product.productDetails || []
+                    productDetails: product.productDetails || [],
+                    isCustomizable: product.customizable || false
                 });
                 if (product.skus && product.skus.length > 0) {
                     setSkuForms(product.skus.map((s: any) => ({
@@ -201,9 +203,6 @@ export default function ProductFormPage() {
         }
         setSkuForms(prev => prev.filter((_, i) => i !== index));
     };
-
-
-
 
 
 
@@ -583,6 +582,20 @@ export default function ProductFormPage() {
                                 value={productFormData.summary}
                                 onChange={e => setProductFormData({ ...productFormData, summary: e.target.value })}
                             />
+                        </div>
+
+                        <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-xl border border-gray-100">
+                            <input
+                                type="checkbox"
+                                id="isCustomizable"
+                                className="w-5 h-5 text-[#10B981] rounded focus:ring-[#10B981] border-gray-300"
+                                checked={productFormData.isCustomizable}
+                                onChange={e => setProductFormData({ ...productFormData, isCustomizable: e.target.checked })}
+                            />
+                            <label htmlFor="isCustomizable" className="text-sm font-bold text-gray-900 select-none cursor-pointer">
+                                This product is Customizable
+                                <p className="text-xs text-gray-400 font-normal mt-0.5">Enables the customization panel for users to upload images and select options.</p>
+                            </label>
                         </div>
                         {/* Product Details Section (Replaces Description) */}
                         <div className="space-y-6 pt-4 border-t border-dashed border-gray-100">

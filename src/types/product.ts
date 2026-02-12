@@ -79,9 +79,11 @@ export interface Product {
     unit?: string; // Optional unit for display
     rating?: number;
     reviewCount?: number;
+    customizable?: boolean;
 }
 
 export interface ProductFilters {
+    category?: string;
     categoryId?: string;
     subcategoryId?: string;
     minPrice?: number;

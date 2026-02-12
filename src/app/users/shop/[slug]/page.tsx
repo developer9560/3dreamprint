@@ -9,7 +9,9 @@ import { notFound } from 'next/navigation';
 import api from '@/src/lib/api';
 import type { Product } from '@/src/types';
 import { Loader2 } from 'lucide-react';
-
+import CustomizationPanel from '@/src/components/product-detail/CustomizationPanel';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronRight, faShieldAlt, faTruck, faHandHoldingHeart, faLeaf } from '@fortawesome/free-solid-svg-icons';
 interface PageProps {
     params: Promise<{ slug: string }>;
 }
@@ -19,6 +21,7 @@ export default function ProductDetailPage({ params }: PageProps) {
     const [product, setProduct] = useState<Product | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [similarProducts, setSimilarProducts] = useState<Product[]>([]);
+    const [isCustomizing, setIsCustomizing] = useState(false);
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -74,7 +77,10 @@ export default function ProductDetailPage({ params }: PageProps) {
 
                         {/* Right: Product Info - Scrollable */}
                         <div className="w-full p-4 md:p-6 lg:p-8 overflow-y-auto max-h-screen">
-                            <ProductInfo product={product} />
+                            <ProductInfo
+                                product={product}
+                                onCustomizeClick={() => setIsCustomizing(true)}
+                            />
 
                             <div className="my-8 h-px bg-gray-100" />
 
@@ -87,6 +93,42 @@ export default function ProductDetailPage({ params }: PageProps) {
                                     '100% Genuine Product'
                                 ]}
                             />
+                            {/* Trust Badges */}
+                            <div className="grid grid-cols-2 gap-4 mt-8">
+                                <div className="flex items-center gap-3 text-sm text-gray-600">
+                                    <FontAwesomeIcon icon={faShieldAlt} className="text-amber-500 text-lg" />
+                                    <span>Secure Payment</span>
+                                </div>
+                                <div className="flex items-center gap-3 text-sm text-gray-600">
+                                    <FontAwesomeIcon icon={faTruck} className="text-amber-500 text-lg" />
+                                    <span>Fast Shipping</span>
+                                </div>
+                                <div className="flex items-center gap-3 text-sm text-gray-600">
+                                    <FontAwesomeIcon icon={faHandHoldingHeart} className="text-amber-500 text-lg" />
+                                    <span>Handcrafted</span>
+                                </div>
+                                <div className="flex items-center gap-3 text-sm text-gray-600">
+                                    <FontAwesomeIcon icon={faLeaf} className="text-amber-500 text-lg" />
+                                    <span>Eco-Friendly</span>
+                                </div>
+                            </div>
+                            <div className="h-px bg-gray-200 my-6" />
+
+                            {/* Customization Modal */}
+                            {product.customizable && isCustomizing && (
+                                <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                                    <div
+                                        className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
+                                        onClick={() => setIsCustomizing(false)}
+                                    />
+                                    <div className="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl max-h-[90vh] flex flex-col z-10 animate-scaleIn">
+                                        <CustomizationPanel
+                                            product={product}
+                                            onClose={() => setIsCustomizing(false)}
+                                        />
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>

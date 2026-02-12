@@ -2,15 +2,19 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import Card from '@/src/components/ui/Card';
 import Button from '@/src/components/ui/Button';
 import Link from 'next/link';
 import ProductCard from '@/src/components/products/ProductCard';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHeart, faGift, faTruckFast, faEnvelope, faQuoteLeft, faCircleCheck } from '@fortawesome/free-solid-svg-icons';
+import { faHeart, faGift, faTruckFast, faEnvelope, faQuoteLeft, faCircleCheck, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { productsAPI } from '@/src/lib/api';
+import { Product } from '@/src/types/product';
+import { toast } from 'react-hot-toast';
 
 export default function ValentinesPage() {
     const [scrolled, setScrolled] = useState(false);
+    const [products, setProducts] = useState<Product[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -18,84 +22,26 @@ export default function ValentinesPage() {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    const valentineProducts = [
-        {
-            id: 1,
-            name: "3D Printed Unique Heart Shaped Phone Holder",
-            mrp: 500,
-            price: 399,
-            images: ["https://manubim.cdn.shoprenter.hu/custom/manubim/image/cache/w500h500wt1/product/Phone%20Holders/szives-telefontarto-asztali.png.webp?lastmod=0.1762876642", "https://manubim.cdn.shoprenter.hu/custom/manubim/image/cache/w1000h1000wt1/product/Phone%20Holders/personalised-heart-phone-holder-3.png.webp?lastmod=0.1762876642"
-                , "https://manubim.cdn.shoprenter.hu/custom/manubim/image/cache/w1000h1000wt1/product/Phone%20Holders/personalised-heart-phone-holder-3.png.webp?lastmod=0.1762876642"
-            ],
-            rating: 5.0,
-            reviewCount: 89,
-            slug: 'heart-shape-phone-holder',
-            discription: "3D Printed Unique Heart Shaped Phone Holder for the tech lovers - 3D printed gift. A custom 3D printed phone holder is always a kind and friendly gift to anyone. In case you would like an other model, please"
-        },
-        {
-            id: 2,
-            name: "3D Photo (Lithophane) Keychain, circle",
-            mrp: 499,
-            price: 299,
-            images: ["https://manubim.cdn.shoprenter.hu/custom/manubim/image/cache/w500h500wt1/product/3D-photo-lithophane/3d-printed-lithophane-keychain-circle.jpg.webp?lastmod=0.1762876642", "https://manubim.cdn.shoprenter.hu/custom/manubim/image/cache/w500h500wt1/product/3D-photo-lithophane/litofan-kulcstarto-3d-nyomtatott-kor.jpg.webp?lastmod=0.1762876642",
-                "https://manubim.cdn.shoprenter.hu/custom/manubim/image/cache/w500h500wt1/product/3D-photo-lithophane/3d-fenykep-kulcstarto-litofan-kor.jpg.webp?lastmod=0.1762876642"
-            ],
-            rating: 5.0,
-            reviewCount: 89,
-            slug: '3d-photo-lithophane-keychain-circle',
-            discription: "This custom photo keychain (lithophane) is a truly rare and unique gift. The 3D image only looks like a white embossing, but when we turn it towards the light – i.e., illuminate it from behind, for example, by placing it in front of a lamp – the grayscale photo will immediately appear. A great gift for your loved one on Valentine's Day!"
+    useEffect(() => {
+        const fetchValentineProducts = async () => {
+            setIsLoading(true);
+            try {
+                // Fetch products with the 'valentine-special' category slug
+                const response = await productsAPI.getAll({
+                    category: 'valentine-special',
+                    limit: 20
+                });
+                setProducts(response.content || []);
+            } catch (error) {
+                console.error('Error fetching valentine products:', error);
+                toast.error('Failed to load love collection');
+            } finally {
+                setIsLoading(false);
+            }
+        };
 
-        },
-        {
-            id: 3,
-            name: 'Cut Heart-Shaped Keychains with Names - 3D printed gift, plastic',
-            mrp: 1599,
-            price: 1279, // 20% off from 1599
-            images: ['https://manubim.cdn.shoprenter.hu/custom/manubim/image/cache/w500h500wt1/product/Key_Rings/Love/cut-heart-shaped-keychain-with-custom-text-3d-printed.jpg.webp?lastmod=0.1762876642', "https://manubim.cdn.shoprenter.hu/custom/manubim/image/cache/w500h500wt1/product/Key_Rings/Love/sziv-alaku-kulcstarto-paroknak-egyedi-nevvel-3d-nyomtatott-termek.jpg.webp?lastmod=0.1762876642"],
-            category: 'Frames',
-            rating: 4.9,
-            reviewCount: 124,
-            slug: 'love-story-photo-frame-heart',
-            discription: "2 pcs of Cut Heart Shaped Keychain with custom text for lovers.Custom 3D printed gift.The text can be anything and depends only on your creativity.Eg.: your names, nicknames, quotes, etc."
-
-        },
-        {
-            id: 4,
-            name: 'Heart Shaped Keychain with Custom Text - 3D printed gift, plastic',
-            mrp: 399,
-            price: 249, // 20% off from 799
-            images: ["https://manubim.cdn.shoprenter.hu/custom/manubim/image/cache/w500h500wt1/product/Key_Rings/Love/heart-shaped-keychain-with-custom-text-3d-printed.jpg.webp?lastmod=0.1762876642", "https://manubim.cdn.shoprenter.hu/custom/manubim/image/cache/w1000h1000wt1/product/Key_Rings/Love/sziv-alaku-kulcstarto-egyedi-szoveggel-3d-nyomtatott.jpg.webp?lastmod=0.1762876642"],
-            category: 'Keychains',
-            rating: 4.8,
-            reviewCount: 203,
-            slug: 'Heart-Shaped-Keychain-with-Custom-Text-3D-printed-gift-plastic',
-            discription: "Heart-Shaped Keychain with custom text option. Custom 3D printed gift. The text can be anything, it depends only on your creativity. Eg.: your love name, nickname, company name, quote, etc."
-        },
-        {
-            id: 5,
-            name: "3D Photo (Lithophane) Keychain, rect",
-            mrp: 499,
-            price: 299,
-            images: ["https://manubim.cdn.shoprenter.hu/custom/manubim/image/cache/w500h500wt1/product/3D-photo-lithophane/3d-printed-lithophane-keychain-rect.jpg.webp?lastmod=0.1762876642", "https://manubim.cdn.shoprenter.hu/custom/manubim/image/cache/w500h500wt1/product/3D-photo-lithophane/litofan-kulcstarto-3d-nyomtatott-negyzetes.jpg.webp?lastmod=0.1762876642", "https://manubim.cdn.shoprenter.hu/custom/manubim/image/cache/w500h500wt1/product/3D-photo-lithophane/3d-fenykep-kulcstarto-litofan-negyzetes.jpg.webp?lastmod=0.1762876642"],
-
-            rating: 4.5,
-            reviewCount: 300,
-            slug: "3D-Photo-(Lithophane)-Keychain-rect",
-            discription: "his custom photo keychain (lithophane) is a truly rare and unique gift. The 3D image only looks like a white embossing, but when we turn it towards the light – i.e., illuminate it from behind, for example, by placing it in front of a lamp – the grayscale photo will immediately appear. A great gift for your loved one on Valentine's Day!"
-
-        }, {
-            id: 6,
-            name: "Phone holder Heart",
-            mrp: 999,
-            price: 432,
-            images: ["https://media.printables.com/media/prints/b1861f4d-49eb-4ed3-97c1-2c7844a57b4b/images/11852857_4a37f090-f1b2-44ea-8b0f-4812bf61ce90_d0225394-fe94-4fd6-afd9-4d6601ca6003/thumbs/inside/1600x1200/png/2026-01-27-15_19_07-handyhalter-herz-v1_-zuhause-autodesk-fusion-lizenz-fur-bildungseinrichtung.webp", "https://media.printables.com/media/prints/b1861f4d-49eb-4ed3-97c1-2c7844a57b4b/images/11852857_4a37f090-f1b2-44ea-8b0f-4812bf61ce90_d0225394-fe94-4fd6-afd9-4d6601ca6003/thumbs/inside/1600x1200/png/2026-01-27-15_19_07-handyhalter-herz-v1_-zuhause-autodesk-fusion-lizenz-fur-bildungseinrichtung.webp"],
-            rating: 4.5,
-            reviewCount: 300,
-            slug: "Phone-holder-Heart",
-            discription: "A cute mobile phone holder to give as a gift."
-
-        }
-    ];
+        fetchValentineProducts();
+    }, []);
 
     return (
         <div className="min-h-screen bg-[var(--v-ivory)] selection:bg-rose-100 selection:text-rose-600">
@@ -241,42 +187,59 @@ export default function ValentinesPage() {
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-                        {valentineProducts.map((product) => (
-                            <div key={product.id} className="relative group p-4 rounded-[var(--radius-xl)] bg-white shadow-romantic border border-rose-50 hover:shadow-2xl transition-all duration-500">
-                                <div className="relative aspect-[4/5] overflow-hidden rounded-2xl mb-6">
-                                    <img
-                                        src={product.images?.[0]}
-                                        alt={product.name}
-                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"
-                                    />
-                                    <div className="absolute top-4 right-4 z-20">
-                                        <span className="bg-rose-600 text-white text-xs font-black px-4 py-2 rounded-full shadow-[0_0_20px_rgba(225,29,72,0.4)] animate-pulse">
-                                            20% OFF
-                                        </span>
-                                    </div>
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-8">
-                                        <Link href="/customize">
-                                            <Button variant="primary" className="!w-full !rounded-xl !py-4 shadow-xl !bg-white !text-rose-600 hover:!bg-rose-50 outline-none border-none animate-fadeInUp">
-                                                Customize This Love Memoir
-                                            </Button>
-                                        </Link>
-                                    </div>
-                                </div>
-                                <div className="px-2">
-                                    <div className="flex justify-between items-start mb-2">
-                                        <h3 className="text-xl font-bold text-slate-900 group-hover:text-rose-600 transition-colors line-clamp-1">{product.name}</h3>
-                                        <div className="flex items-center gap-1 text-amber-500">
-                                            <FontAwesomeIcon icon={faHeart} className="text-xs" />
-                                            <span className="text-xs font-bold">{product.rating}</span>
+                        {isLoading ? (
+                            // Loading Skeleton
+                            [...Array(3)].map((_, i) => (
+                                <div key={i} className="aspect-[4/5] bg-rose-50/50 rounded-[var(--radius-xl)] animate-pulse border border-rose-100/50" />
+                            ))
+                        ) : products.length > 0 ? (
+                            products.map((product) => (
+                                <div key={product.id} className="relative group p-4 rounded-[var(--radius-xl)] bg-white shadow-romantic border border-rose-50 hover:shadow-2xl transition-all duration-500 animate-fadeInUp">
+                                    <div className="relative aspect-[4/5] overflow-hidden rounded-2xl mb-6">
+                                        <img
+                                            src={product.images?.[0]?.imageUrl || 'https://upload.wikimedia.org/wikipedia/commons/a/a3/Image-not-found.png'}
+                                            alt={product.name}
+                                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"
+                                        />
+                                        <div className="absolute top-4 right-4 z-20">
+                                            <span className="bg-rose-600 text-white text-xs font-black px-4 py-2 rounded-full shadow-[0_0_20px_rgba(225,29,72,0.4)] animate-pulse">
+                                                SPECIAL OFFER
+                                            </span>
+                                        </div>
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-8">
+                                            <Link href={`/users/shop/${product.slug}`}>
+                                                <Button variant="primary" className="!w-full !rounded-xl !py-4 shadow-xl !bg-white !text-rose-600 hover:!bg-rose-50 outline-none border-none">
+                                                    View Love Memoir
+                                                </Button>
+                                            </Link>
                                         </div>
                                     </div>
-                                    <div className="flex items-center gap-3">
-                                        <span className="text-2xl font-black text-rose-600">₹{product.price.toLocaleString()}</span>
-                                        <span className="text-sm text-slate-400 line-through font-medium">₹{product.mrp.toLocaleString()}</span>
+                                    <div className="px-2">
+                                        <div className="flex justify-between items-start mb-2">
+                                            <h3 className="text-xl font-bold text-slate-900 group-hover:text-rose-600 transition-colors line-clamp-1">{product.name}</h3>
+                                            <div className="flex items-center gap-1 text-amber-500">
+                                                <FontAwesomeIcon icon={faHeart} className="text-xs" />
+                                                <span className="text-xs font-bold">5.0</span>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center gap-3">
+                                            <span className="text-2xl font-black text-rose-600">₹{product.skus?.[0]?.price?.toLocaleString()}</span>
+                                            {product.skus?.[0]?.mrp > product.skus?.[0]?.price && (
+                                                <span className="text-sm text-slate-400 line-through font-medium">₹{product.skus?.[0]?.mrp?.toLocaleString()}</span>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
+                            ))
+                        ) : (
+                            <div className="col-span-full py-20 text-center">
+                                <div className="w-20 h-20 bg-rose-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                                    <FontAwesomeIcon icon={faSearch} className="text-rose-200 text-3xl" />
+                                </div>
+                                <h3 className="text-xl font-bold text-slate-900 mb-2">Collection Coming Soon</h3>
+                                <p className="text-slate-400">Our artisans are crafting new masterpieces for you.</p>
                             </div>
-                        ))}
+                        )}
                     </div>
                 </div>
             </section>

@@ -53,15 +53,9 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
                 {/* Badges */}
                 <div className="absolute top-4 left-4 flex flex-col gap-2 z-10">
                     {discount > 0 && (
-                        <span className="px-3 py-1.5 text-[10px] font-black text-white bg-rose-500 rounded-lg shadow-lg flex items-center gap-1.5 uppercase tracking-tighter">
+                        <span className="px-3 py-1.5 text-[10px] font-black text-white bg-amber-500 rounded-lg shadow-lg flex items-center gap-1.5 uppercase tracking-tighter">
                             <FontAwesomeIcon icon={faTag} className="text-[10px]" />
                             {discount}% Saved
-                        </span>
-                    )}
-                    {product.id % 3 === 0 && ( // Mocking a "Trending" badge for visual interest
-                        <span className="px-3 py-1.5 text-[10px] font-black text-white bg-amber-500 rounded-lg shadow-lg flex items-center gap-1.5 uppercase tracking-tighter">
-                            <FontAwesomeIcon icon={faFire} className="text-[10px]" />
-                            Trending
                         </span>
                     )}
                 </div>

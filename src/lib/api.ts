@@ -240,7 +240,7 @@ export const userAPI = {
       country: address.country || 'India',
       postalCode: address.postalCode,
       contactNumber: address.contactNumber,
-      type: address.type === 'office' ? 'WORK' : 'HOME',
+      type: (address.type as string) === 'office' ? 'WORK' : (address.type as string) === 'WORK' ? 'WORK' : 'HOME',
       isDefault: address.isDefault
     };
 
@@ -271,7 +271,7 @@ export const userAPI = {
       country: address.country || 'India',
       postalCode: address.postalCode,
       contactNumber: address.contactNumber,
-      type: address.type === 'office' ? 'WORK' : 'HOME',
+      type: (address.type as string) === 'office' ? 'WORK' : (address.type as string) === 'WORK' ? 'WORK' : 'HOME',
       isDefault: address.isDefault
     };
 
@@ -414,6 +414,10 @@ export const productsAPI = {
 
   softDelete: async (id: number | string): Promise<void> => {
     await api.delete(`/admin/products/${id}`);
+  },
+
+  toggleCustomizable: async (id: number | string): Promise<void> => {
+    await api.patch(`/admin/products/${id}/toggle-customizable`);
   },
 
   permanentDelete: async (id: number | string): Promise<void> => {
@@ -896,6 +900,69 @@ export const productImageAPI = {
 export const publicApi = {
   getBanners: async (): Promise<ApiResponse<any>> => {
     const { data } = await api.get("/public/banners");
+    return data;
+  },
+};
+
+// Custom Order API (for lithophane customization)
+export const customOrderAPI = {
+  /**
+   * Upload customization images to Cloudinary
+   * @param images - Array of image files
+   * @returns Array of uploaded image URLs
+   */
+  uploadCustomizationImages: async (images: File[]): Promise<string[]> => {
+    const formData = new FormData();
+    images.forEach((image) => {
+      formData.append('images', image);
+    });
+
+    const { data } = await api.post<{
+      success: boolean;
+      uploadedUrls: string[];
+      uploadCount: number;
+      message: string;
+      errors?: string[];
+    }>('/api/customization/upload-images', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    if (!data.success) {
+      throw new Error(data.message || 'Image upload failed');
+    }
+
+    return data.uploadedUrls;
+  },
+
+  /**
+   * Create a custom lithophane order
+   * @param orderData - Order data matching CreateCustomOrderRequest DTO
+   * @returns Order response with order ID and details
+   */
+  createCustomOrder: async (orderData: {
+    addressId: number;
+    productSkuId: number;
+    quantity: number;
+    customizationData?: {
+      uploadedImageUrls: string[];
+      selectedShape: string;
+      selectedSize: string;
+      selectedLighting: string;
+      specialInstructions: string;
+    } | null;
+    paymentMethod: string;
+  }): Promise<{
+    orderId: number;
+    razorpayOrderId: string | null;
+    totalAmount: number;
+    orderStatus: string;
+    paymentStatus: string;
+    createdAt: string;
+    message: string;
+  }> => {
+    const { data } = await api.post('/api/orders/custom', orderData);
     return data;
   },
 };

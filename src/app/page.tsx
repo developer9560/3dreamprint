@@ -21,7 +21,7 @@ export default function Home() {
           <source src="/videos/bgvideo.mp4" type="video/mp4" />
         </video>
         {/* Dark overlay to ensure text readability */}
-        <div className="absolute inset-0 bg-black/40"></div>
+        <div className="absolute inset-0 "></div>
       </div>
 
       {/* Scroll-based Image Sequence Background */}

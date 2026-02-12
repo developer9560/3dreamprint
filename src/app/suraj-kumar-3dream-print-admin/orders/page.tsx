@@ -589,27 +589,97 @@ export default function AdminOrdersPage() {
                                 </div>
                                 <div className="space-y-3">
                                     {orderDetail.item.map((item, idx) => (
-                                        <div key={idx} className="flex gap-4 p-3 bg-white rounded-2xl border border-gray-100 shadow-sm hover:border-blue-200 transition-all group">
-                                            <div className="relative w-16 h-16 rounded-xl overflow-hidden bg-gray-100 flex-shrink-0">
-                                                {item.productImage ? (
-                                                    <Image
-                                                        src={item.productImage}
-                                                        alt={item.productName}
-                                                        fill
-                                                        className="object-cover group-hover:scale-110 transition-transform duration-500"
-                                                    />
-                                                ) : (
-                                                    <Package className="w-full h-full p-4 text-gray-300" />
-                                                )}
-                                            </div>
-                                            <div className="flex-1 min-w-0">
-                                                <p className="text-sm font-bold text-gray-900 truncate leading-tight">{item.productName}</p>
-                                                <p className="text-[10px] text-gray-400 mt-0.5">SKU: {item.skuCode}</p>
-                                                <div className="flex items-center justify-between mt-2">
-                                                    <p className="text-xs font-bold text-blue-600">{item.quantity} × {formatPrice(item.price)}</p>
-                                                    <p className="text-sm font-black text-gray-900">{formatPrice(item.price * item.quantity)}</p>
+                                        <div key={idx} className="flex flex-col p-3 bg-white rounded-2xl border border-gray-100 shadow-sm hover:border-blue-200 transition-all group">
+                                            <div className="flex gap-4">
+                                                <div className="relative w-16 h-16 rounded-xl overflow-hidden bg-gray-100 flex-shrink-0">
+                                                    {item.productImage ? (
+                                                        <Image
+                                                            src={item.productImage}
+                                                            alt={item.productName}
+                                                            fill
+                                                            className="object-cover group-hover:scale-110 transition-transform duration-500"
+                                                        />
+                                                    ) : (
+                                                        <Package className="w-full h-full p-4 text-gray-300" />
+                                                    )}
+                                                </div>
+                                                <div className="flex-1 min-w-0">
+                                                    <p className="text-sm font-bold text-gray-900 truncate leading-tight">{item.productName}</p>
+                                                    <p className="text-[10px] text-gray-400 mt-0.5">SKU: {item.skuCode}</p>
+                                                    <div className="flex items-center justify-between mt-2">
+                                                        <p className="text-xs font-bold text-blue-600">{item.quantity} × {formatPrice(item.price)}</p>
+                                                        <p className="text-sm font-black text-gray-900">{formatPrice(item.price * item.quantity)}</p>
+                                                    </div>
                                                 </div>
                                             </div>
+
+                                            {/* Customization Details */}
+                                            {item.customizationData && (
+                                                <div className="mt-3 pt-3 border-t border-gray-50">
+                                                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2 flex items-center gap-1">
+                                                        <Filter size={10} /> Customization Details
+                                                    </p>
+
+                                                    {/* Attributes Grid */}
+                                                    <div className="grid grid-cols-2 gap-2 mb-3">
+                                                        {item.customizationData.selectedShape && (
+                                                            <div className="bg-gray-50 p-2 rounded-lg border border-gray-100">
+                                                                <span className="text-[9px] font-bold text-gray-400 uppercase block">Shape</span>
+                                                                <span className="text-xs font-bold text-gray-900">{item.customizationData.selectedShape}</span>
+                                                            </div>
+                                                        )}
+                                                        {item.customizationData.selectedSize && (
+                                                            <div className="bg-gray-50 p-2 rounded-lg border border-gray-100">
+                                                                <span className="text-[9px] font-bold text-gray-400 uppercase block">Size</span>
+                                                                <span className="text-xs font-bold text-gray-900">{item.customizationData.selectedSize}</span>
+                                                            </div>
+                                                        )}
+                                                        {item.customizationData.selectedLighting && (
+                                                            <div className="bg-gray-50 p-2 rounded-lg border border-gray-100">
+                                                                <span className="text-[9px] font-bold text-gray-400 uppercase block">Lighting</span>
+                                                                <span className="text-xs font-bold text-gray-900">{item.customizationData.selectedLighting}</span>
+                                                            </div>
+                                                        )}
+                                                    </div>
+
+                                                    {/* Special Instructions */}
+                                                    {item.customizationData.specialInstructions && (
+                                                        <div className="bg-yellow-50 p-3 rounded-lg border border-yellow-100 mb-3">
+                                                            <span className="text-[9px] font-bold text-yellow-500 uppercase block mb-1">Special Instructions</span>
+                                                            <p className="text-xs text-yellow-900 italic leading-relaxed">"{item.customizationData.specialInstructions}"</p>
+                                                        </div>
+                                                    )}
+
+                                                    {/* Uploaded Images */}
+                                                    {item.customizationData.uploadedImageUrls && item.customizationData.uploadedImageUrls.length > 0 && (
+                                                        <div>
+                                                            <span className="text-[9px] font-bold text-gray-400 uppercase block mb-2">Uploaded Images ({item.customizationData.uploadedImageUrls.length})</span>
+                                                            <div className="flex flex-wrap gap-2">
+                                                                {item.customizationData.uploadedImageUrls.map((url, imgIdx) => (
+                                                                    <a
+                                                                        key={imgIdx}
+                                                                        href={url}
+                                                                        target="_blank"
+                                                                        rel="noopener noreferrer"
+                                                                        className="relative w-16 h-16 rounded-lg overflow-hidden border border-gray-200 hover:border-green-500 hover:shadow-md transition-all group/img"
+                                                                        title="Click to view full size"
+                                                                    >
+                                                                        <Image
+                                                                            src={url}
+                                                                            alt={`Custom Upload ${imgIdx + 1}`}
+                                                                            fill
+                                                                            className="object-cover"
+                                                                        />
+                                                                        <div className="absolute inset-0 bg-black/0 group-hover/img:bg-black/20 transition-colors flex items-center justify-center">
+                                                                            <Download className="text-white opacity-0 group-hover/img:opacity-100 transform scale-75 group-hover/img:scale-100 transition-all" size={16} />
+                                                                        </div>
+                                                                    </a>
+                                                                ))}
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            )}
                                         </div>
                                     ))}
                                 </div>
